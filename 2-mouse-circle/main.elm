@@ -6,7 +6,6 @@ import Css.Dimension exposing (width, height)
 import Css.Background as Background
 import Css.Position as Position exposing (position, top, left)
 import Color exposing (rgba)
-import StartApp.Simple as StartApp
 import Mouse as Mouse
 import Signal exposing (map)
 import Debug

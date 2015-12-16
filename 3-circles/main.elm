@@ -1,4 +1,4 @@
-import Html exposing (div, text)
+import Html exposing (div)
 import Html.Attributes as Attr exposing (style)
 import Html.Events exposing (onClick)
 import Css as Css exposing (Styles, style)
@@ -6,19 +6,10 @@ import Css.Dimension exposing (width, height)
 import Css.Background as Background
 import Css.Position as Position exposing (position, top, left)
 import Color exposing (Color, rgba)
-import StartApp.Simple as StartApp
-import Mouse as Mouse
-import Random as Rand
-import Window as Window
-import Signal exposing (map, map3, constant)
+import Signal exposing (map)
 import Debug
 
 main = view
-
-model = Mouse.position
-
-seed: Rand.Seed
-seed = Rand.initialSeed 1729
 
 type alias Circle = (Int, Int, Int)
 
