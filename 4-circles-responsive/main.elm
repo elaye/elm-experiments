@@ -23,36 +23,37 @@ circleStyle x y r =
   <| height (2 * r)
   <| Css.style "border-radius" "50%"
   <| Css.style "transform" "translate(-50%, -50%)"
-  <| Background.color (rgba 90 50 120 1)
+  <| Background.color (rgba 90 150 120 1)
   []
 
 circleDiv: Circle -> Html.Html
 circleDiv (x, y, r) = div [ Attr.style (circleStyle x y r) ] []
 
-circlesDivs: Signal (List Circle) -> Signal (List Html.Html)
-circlesDivs cs = map (List.map circleDiv) cs
+circlesDivs: List Circle -> List Html.Html
+circlesDivs cs = List.map circleDiv cs
 
-circles: Signal Int -> Signal Int -> Int -> Int -> Signal (List Circle)
+circles: Int -> Int -> Int -> Int -> List Circle
 circles nx ny margin radius = 
   let fstCircle = (0, 0, radius)
-      base = map (\n -> List.repeat n fstCircle) nx
-      row = map (\b -> List.scanl (\_ (x, y, r) -> (x + margin + 2 * radius, y, r)) fstCircle b) base
-      rows = map2 (\n b -> List.repeat n b) ny base
+      base = List.repeat nx fstCircle
+      row = List.scanl (\_ (x, y, r) -> (x + margin + 2 * radius, y, r)) fstCircle base
+      rows = List.repeat ny base
       shift = \(x, y, r) -> (x, y + margin + 2 * radius, r)
-  in map2 (\rw rws -> List.concat <| List.scanl (\_ c -> List.map shift c) rw rws) row rows
+  in List.concat <| List.scanl (\_ c -> List.map shift c) row rows
 
-circleNb: Int -> Int -> Signal Int -> Signal Int
+circleNb: Int -> Int -> Int -> Int
 circleNb radius margin dim =
   let w = toFloat <| 2 * radius + margin
-      dc = map (\d -> (toFloat d) / w) dim
-  in map (\n -> round n) dc
+      dc = (toFloat dim) / w
+  in round dc
 
 view: Signal Html.Html
 view = 
   let radius = 20
       margin = 10
       n = circleNb radius margin
-      nx = n Window.width
-      ny = n Window.height
-      divs = circlesDivs <| circles nx ny margin radius
+      nx = map n Window.width
+      ny = map n Window.height
+      cs = map2 (\x y -> circles x y margin radius) nx ny
+      divs = map circlesDivs cs
   in map (div []) divs
